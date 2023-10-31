@@ -1,4 +1,4 @@
-export const checkPermission = (subscription, uid, permissions) => {
+export const checkPermission = (subscription: any, uid: any, permissions: any) => {
     let allow = false;
     for(let i=0; i<permissions.length; i++){
         if(subscription.permissions && subscription.permissions[permissions[i]]){
