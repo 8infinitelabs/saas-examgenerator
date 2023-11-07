@@ -28,6 +28,8 @@
     "@fireactjs/core": "^1.1.1",
     "@stripe/react-stripe-js": "^1.15.0",
     "@stripe/stripe-js": "^1.44.1",
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.5.0",
     "react-country-state-fields": "^1.0.4"
   },
   "peerDependencies": {

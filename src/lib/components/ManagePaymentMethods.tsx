@@ -96,7 +96,7 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
               </Grid>
             </Box>
             <Box p={2}>
-              {error !== null ? (
+              {error ? (
                 <Alert severity="error">{error}</Alert>
               ) : (
                 <>

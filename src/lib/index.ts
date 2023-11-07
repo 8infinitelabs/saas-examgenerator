@@ -18,7 +18,6 @@ import { UpdateUser } from "./components/UpdateUser";
 import { ChangePlan } from "./components/ChangePlan";
 import { CancelSubscription } from "./components/CancelSubscription";
 
-
 export {
     AddUser,
     BillingDetails,

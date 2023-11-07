@@ -97,7 +97,7 @@ export const ListInvoices = ({ loader }: { loader: JSX.Element }) => {
     <>
       {loaded ? (
         <Container maxWidth="xl">
-          {error !== null ? (
+          {error ? (
             <Alert severity="error">{error}</Alert>
           ) : (
             <Paper>

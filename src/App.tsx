@@ -19,6 +19,8 @@ import {
   FireactProvider,
   ActionPages
 } from '@fireactjs/core';
+import { getApp } from "firebase/app";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { BrowserRouter, Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -40,6 +42,7 @@ import {
   UpdateBillingDetails
 } from './lib';
 import SaaSConfig from './config.json';
+import { useEffect } from 'react';
 
 const Brand = "FIREACT";
 
@@ -92,6 +95,11 @@ function App() {
     authProviders: authMethods,
     saas: SaaSConfig
   }
+
+  useEffect(() => {
+    const functions = getFunctions(getApp());
+    connectFunctionsEmulator(functions, "localhost", 5001);
+  }, []);
 
   return (
     <FireactProvider config={config}>

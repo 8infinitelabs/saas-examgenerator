@@ -21,7 +21,7 @@ export const CancelSubscription = () => {
         <Box p={2}>
           <Typography component="h1" variant="h4" align="center">Cancel Subscription</Typography>
         </Box>
-        {error !== null &&
+        {error &&
           <Box p={2}>
             <Alert severity="error">{error}</Alert>
           </Box>

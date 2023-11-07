@@ -12,9 +12,8 @@ export const Settings = () => {
   const [success, setSuccess] = useState<string>('');
   const [processing, setProcessing] = useState(false);
   const { config } = useContext<any>(FireactContext);
-  const label = config.saas.subscription.singular.substr(0, 1).toUpperCase() + config.saas.subscription.singular.substr(1);
+  const label = config.saas.subscription?.singular.substr(0, 1).toUpperCase() + config.saas.subscription?.singular.substr(1);
   const { firestoreInstance } = useContext<any>(AuthContext);
-
   const [subscriptionName, setSubscriptionName] = useState(defaultName);
 
   const updateSubscription = () => {
@@ -49,7 +48,7 @@ export const Settings = () => {
         <Box p={2}>
           <Typography component="h1" variant="h4" align="center">Settings</Typography>
         </Box>
-        {error !== null &&
+        {error &&
           <Box p={2}>
             <Alert severity="error">{error}</Alert>
           </Box>
@@ -77,7 +76,15 @@ export const Settings = () => {
 
             </Grid>
             <Grid item>
-              <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => updateSubscription()} >Save</Button>
+              <Button
+                type="button"
+                color="primary"
+                variant="contained"
+                disabled={processing}
+                onClick={() => updateSubscription()}
+              >
+                Save
+              </Button>
             </Grid>
           </Grid>
         </Box>

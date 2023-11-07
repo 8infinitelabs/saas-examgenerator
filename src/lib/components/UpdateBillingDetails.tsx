@@ -57,7 +57,7 @@ export const UpdateBillingDetails = ({ loader }: { loader: JSX.Element }) => {
                 </Grid>
               </Grid>
             </Box>
-            {error !== null ? (
+            {error ? (
               <Box p={2}>
                 <Alert severity="error">{error}</Alert>
               </Box>

@@ -6,7 +6,6 @@ import { httpsCallable } from "firebase/functions";
 import { Stack } from "@mui/system";
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
-
 interface invite {
   id: string,
   sender: string,
@@ -83,15 +82,15 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
             <Box p={2}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 <Grid item>
-                  <Typography component="h1" variant="h4">My {config.saas.subscription.plural}</Typography>
+                  <Typography component="h1" variant="h4">My {config.saas?.subscription?.plural}</Typography>
                 </Grid>
                 <Grid item textAlign="right">
-                  <Button variant="contained" onClick={() => navigate(config.pathnames.CreateSubscription)}>Add {config.saas.subscription.singular}</Button>
+                  <Button variant="contained" onClick={() => navigate(config.pathnames.CreateSubscription)}>Add {config.saas?.subscription?.singular}</Button>
                 </Grid>
               </Grid>
             </Box>
             <Box p={2}>
-              {error !== null ? (
+              {error ? (
                 <Alert severity="error">{error}</Alert>
               ) : (
                 <>
@@ -155,7 +154,7 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
                       </Grid>
                     )) : (
                       <Grid item >
-                        You don't have access to any {config.saas.subscription.singular}. Please create one or ask your admin to invite you to one.
+                        You don't have access to any {config.saas?.subscription?.singular}. Please create one or ask your admin to invite you to one.
                       </Grid>
                     )}
                   </Grid>

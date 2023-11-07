@@ -131,7 +131,7 @@ export const ChangePlan = () => {
                     >
                       Your Billing Details
                     </Typography>
-                    {error !== null &&
+                    {error &&
                       <Alert severity="error">{error}</Alert>
                     }
                     <BillingDetails
@@ -156,7 +156,7 @@ export const ChangePlan = () => {
                     >
                       Setup Payment Method
                     </Typography>
-                    {error !== null &&
+                    {error &&
                       <Alert severity="error">{error}</Alert>
                     }
                     <PaymentMethodForm
@@ -180,7 +180,7 @@ export const ChangePlan = () => {
                 >
                   Choose a Plan
                 </Typography>
-                {error !== null &&
+                {error &&
                   <Alert severity="error">{error}</Alert>
                 }
                 <div>

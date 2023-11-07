@@ -39,7 +39,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
     email: string,
     displayName: string,
     permissions: Permissions[],
-  }| undefined>();
+  } | undefined>();
   const [addUserActive, setAddUserActive] = useState(false);
 
   const [processing, setProcessing] = useState(false);
@@ -164,14 +164,18 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
       {loaded ? (
         <>
           {selectedUser !== null ? (
-            <UpdateUser user={selectedUser} setSelectedUser={setSelectedUser} setUsers={setUsers} />
+            <UpdateUser
+              user={selectedUser}
+              setSelectedUser={setSelectedUser}
+              setUsers={setUsers}
+            />
           ) : (
             <>
               {addUserActive ? (
                 <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} />
               ) : (
                 <Container maxWidth="xl">
-                  {error !== null ? (
+                  {error ? (
                     <Alert severity="error">{error}</Alert>
                   ) : (
                     <Paper>

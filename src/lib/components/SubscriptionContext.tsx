@@ -27,16 +27,16 @@ export const SubscriptionProvider = ({ loader }: { loader: JSX.Element }) => {
         setSubscription(sub);
       } else {
         // no subscription
-        setError("No " + config.saas.subscription.singular + " matches the ID");
+        setError("No " + config.saas.subscription?.singular + " matches the ID");
       }
     }).catch(error => {
       setError(error.message);
     })
-  }, [subscriptionId, firestoreInstance, config.saas.subscription.singular, setError]);
+  }, [subscriptionId, firestoreInstance, config.saas.subscription?.singular, setError]);
 
   return (
     <>
-      {error !== null ? (
+      {error ? (
         <Box mt={10}>
           <Container maxWidth="sm">
             <Box component="span" m={5} textAlign="center">

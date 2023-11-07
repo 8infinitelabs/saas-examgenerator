@@ -18,15 +18,15 @@ export interface User {
 };
 
 export interface Plan {
-      id: string,
-      title: string,
-      popular: boolean,
-      priceIds: string[],
-      currency: string,
-      price: number,
-      frequency: string,
-      description: string[],
-      free: boolean,
-      legacy: boolean
-    
+  id: string,
+  title: string,
+  popular: boolean,
+  priceIds: string[],
+  currency: string,
+  price: number,
+  frequency: string,
+  description: string[],
+  free: boolean,
+  legacy: boolean
+
 }

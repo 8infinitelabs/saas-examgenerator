@@ -44,7 +44,7 @@ export const UpdateUser = ({ user, setSelectedUser, setUsers }: {
         <Box p={2}>
           <Typography component="h1" variant="h4" align="center">Update User</Typography>
         </Box>
-        {error !== null &&
+        {error &&
           <Box p={2}>
             <Alert severity="error">{error}</Alert>
           </Box>

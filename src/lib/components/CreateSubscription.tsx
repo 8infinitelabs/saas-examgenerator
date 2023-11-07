@@ -21,7 +21,7 @@ export const CreateSubscription = () => {
   const [paymentStep, setPaymentStep] = useState(1);
   const [billingDetails, setBillingDetails] = useState<any>();
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
-  const singular = config.saas.subscription.singular;
+  const singular = config.saas.subscription?.singular;
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -106,10 +106,10 @@ export const CreateSubscription = () => {
                   >
                     Your Billing Details
                   </Typography>
-                  {error !== null &&
+                  {error &&
                     <Alert severity="error">{error}</Alert>
                   }
-                  <BillingDetails 
+                  <BillingDetails
                     buttonText={"Continue"}
                     setBillingDetailsObject={(obj: any) => {
                       setBillingDetails(obj);
@@ -131,7 +131,7 @@ export const CreateSubscription = () => {
                   >
                     Setup Payment Method
                   </Typography>
-                  {error !== null &&
+                  {error &&
                     <Alert severity="error">{error}</Alert>
                   }
                   <PaymentMethodForm
@@ -156,7 +156,7 @@ export const CreateSubscription = () => {
               >
                 Choose a Plan
               </Typography>
-              {error !== null &&
+              {error &&
                 <Alert severity="error">{error}</Alert>
               }
               <div>
