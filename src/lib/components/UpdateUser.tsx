@@ -24,19 +24,14 @@ export const UpdateUser = ({ user, setSelectedUser, setUsers }: {
 
   const { subscription, setSubscription } = useContext(SubscriptionContext);
   const subscriptionName = subscription?.name ? subscription?.name : "";
-
   const { config } = useContext<any>(FireactContext);
-  const permissions = config.saas.permissions || {};
-
+  const permissions = config.saas?.permissions || {};
   const [processing, setProcessing] = useState(false);
-
   const { firestoreInstance } = useContext<any>(AuthContext);
-
   const [userPermissions, setUserPermissions] = useState(user?.permissions);
-
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState(false);
-
+  const keys = Object.keys(permissions);
   return (
     <Container maxWidth="md">
       <SetPageTitle title={"Update User" + (subscriptionName !== "" ? (" - " + subscriptionName) : "")} />
@@ -77,7 +72,7 @@ export const UpdateUser = ({ user, setSelectedUser, setUsers }: {
             <FormControl fullWidth>
               <FormLabel>Permissions</FormLabel>
               <Grid container>
-                {Object.keys(permissions).map((key: any, index) => {
+                {keys.map((key: any, index) => {
                   return (
                     <Grid item xs={12} md={3} key={index}>
                       <FormControlLabel control={<Checkbox
@@ -93,9 +88,9 @@ export const UpdateUser = ({ user, setSelectedUser, setUsers }: {
                             );
                           }
                         }}
-                        defaultChecked={user!.permissions!.indexOf(key) >= 0 ? true : false}
-                        disabled={permissions[key].default ? true : false} />
-                      } label={permissions[key].label ? permissions[key].label : key} />
+                        defaultChecked={user!.permissions?.indexOf(key) >= 0 ? true : false}
+                        disabled={permissions[key]?.default ? true : false} />
+                      } label={permissions[key]?.label ? permissions[key]?.label : key} />
                     </Grid>
                   )
                 })}

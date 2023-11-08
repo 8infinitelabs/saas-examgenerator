@@ -1,12 +1,12 @@
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Container, Paper, Stack, Typography } from "@mui/material";
-import { useContext, useState } from "react";
-import { PricingPlans } from "./PricingPlans";
-import { httpsCallable } from "firebase/functions";
-import { PaymentMethodForm } from "./PaymentMethodForm";
-import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
+import { getAuth } from "firebase/auth";
+import { PricingPlans } from "./PricingPlans";
+import { PaymentMethodForm } from "./PaymentMethodForm";
 import { BillingDetails } from "./BillingDetails";
 import { Plan } from "./types";
 
@@ -30,7 +30,7 @@ export const CreateSubscription = () => {
     setError('');
     if (plan.free) {
       // subscribe to free plans on selection
-      const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
+      const createSubscription = httpsCallable(functionsInstance, 'createSubscription');
       createSubscription({
         planId: plan.id,
         paymentMethodId: null,
@@ -57,7 +57,7 @@ export const CreateSubscription = () => {
   const submitPlan = (paymentMethod: any) => {
     setProcessing(true);
     setError('');
-    const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
+    const createSubscription = httpsCallable(functionsInstance, 'createSubscription');
     let subscriptionId: string;
     createSubscription({
       paymentMethodId: paymentMethod.id,

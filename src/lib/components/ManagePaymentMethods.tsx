@@ -130,7 +130,7 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
                               cardLast4: pm.card.last4
                             }, { merge: true }).then(() => {
                               // attach the payment method to a subscription via cloud function
-                              const updateSubscriptionPaymentMethod = httpsCallable(functionsInstance, 'fireactjsSaas-updateSubscriptionPaymentMethod');
+                              const updateSubscriptionPaymentMethod = httpsCallable(functionsInstance, 'updateSubscriptionPaymentMethod');
                               return updateSubscriptionPaymentMethod({
                                 subscriptionId: subscription?.id,
                                 paymentMethodId: pm.id
@@ -196,7 +196,7 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
                                 onClick={() => {
                                   setProcessing(true);
                                   setError('');
-                                  const updateSubscriptionPaymentMethod = httpsCallable(functionsInstance, 'fireactjsSaas-updateSubscriptionPaymentMethod');
+                                  const updateSubscriptionPaymentMethod = httpsCallable(functionsInstance, 'updateSubscriptionPaymentMethod');
                                   return updateSubscriptionPaymentMethod({
                                     subscriptionId: subscription?.id,
                                     paymentMethodId: paymentMethod.id
@@ -224,7 +224,7 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
                                 onClick={() => {
                                   setProcessing(true);
                                   setError('');
-                                  const removePaymentMethod = httpsCallable(functionsInstance, 'fireactjsSaas-removePaymentMethod');
+                                  const removePaymentMethod = httpsCallable(functionsInstance, 'removePaymentMethod');
                                   return removePaymentMethod({
                                     paymentMethodId: paymentMethod.id
                                   }).then(() => {

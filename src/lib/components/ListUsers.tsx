@@ -46,7 +46,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
 
   const reovkeInvite = useCallback(({ inviteId, subscriptionId }: {inviteId: string, subscriptionId: string}) => {
     setProcessing(true);
-    const revokeInvite = httpsCallable(functionsInstance, 'fireactjsSaas-revokeInvite');
+    const revokeInvite = httpsCallable(functionsInstance, 'revokeInvite');
     revokeInvite({
       subscriptionId: subscriptionId,
       inviteId: inviteId,
@@ -60,7 +60,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
 
   useEffect(() => {
     setError(null);
-    const getSubscriptionUsers = httpsCallable(functionsInstance, 'fireactjsSaas-getSubscriptionUsers');
+    const getSubscriptionUsers = httpsCallable(functionsInstance, 'getSubscriptionUsers');
     getSubscriptionUsers({ subscriptionId: subscription?.id }).then((result: any) => {
       setTotal(result.data.total);
       result.data.users.sort((a: User, b: User) => a.displayName > b.displayName);
@@ -163,7 +163,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
       <SetPageTitle title={"User List" + (subscriptionName !== "" ? (" - " + subscriptionName) : "")} />
       {loaded ? (
         <>
-          {selectedUser !== null ? (
+          {selectedUser !== null && selectedUser !== undefined ? (
             <UpdateUser
               user={selectedUser}
               setSelectedUser={setSelectedUser}

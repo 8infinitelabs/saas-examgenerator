@@ -31,7 +31,7 @@ export const ChangePlan = () => {
     setError('');
     if (plan.free || subscription?.paymentMethod) {
       // subscribe to the new plan
-      const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
+      const changeSubscriptionPlan = httpsCallable(functionsInstance, 'changeSubscriptionPlan');
       changeSubscriptionPlan({
         paymentMethodId: subscription?.paymentMethod,
         billingDetails: null,
@@ -65,7 +65,7 @@ export const ChangePlan = () => {
   const submitPlan = (paymentMethod: any) => {
     setProcessing(true);
     setError('');
-    const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
+    const changeSubscriptionPlan = httpsCallable(functionsInstance, 'changeSubscriptionPlan');
     changeSubscriptionPlan({
       paymentMethodId: paymentMethod.id,
       billingDetails: billingDetails,

@@ -61,7 +61,7 @@ export const CancelSubscription = () => {
                   setError("The input confirmation does not match \"" + subscription?.id + "\"");
                   setProcessing(false);
                 } else {
-                  const cancelSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-cancelSubscription');
+                  const cancelSubscription = httpsCallable(functionsInstance, 'cancelSubscription');
                   return cancelSubscription({
                     subscriptionId: subscription?.id
                   }).then(() => {

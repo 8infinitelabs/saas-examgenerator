@@ -76,7 +76,7 @@ export const UpdateBillingDetails = ({ loader }: { loader: JSX.Element }) => {
                     setBillingDetailsObject={(obj: any) => {
                       setProcessing(true);
                       setSuccess(false);
-                      const changeBillingDetails = httpsCallable(functionsInstance, 'fireactjsSaas-changeBillingDetails');
+                      const changeBillingDetails = httpsCallable(functionsInstance, 'changeBillingDetails');
                       changeBillingDetails({ billingDetails: obj }).then(() => {
                         setBillingDetails(obj);
                         setProcessing(false);

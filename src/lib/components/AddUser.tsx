@@ -93,7 +93,7 @@ export const AddUser = ({ setAddUserActive, setUsers }: {
                 setProcessing(true);
                 setError(null);
                 setSuccess(false);
-                const inviteUser = httpsCallable(functionsInstance, 'fireactjsSaas-inviteUser');
+                const inviteUser = httpsCallable(functionsInstance, 'inviteUser');
                 inviteUser({
                   email: email.toLocaleLowerCase(),
                   displayName: displayName,

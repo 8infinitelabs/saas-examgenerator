@@ -126,7 +126,7 @@ export const ListInvoices = ({ loader }: { loader: JSX.Element }) => {
                           navigate(config.pathnames.ChangePlan.replace(":subscriptionId", subscription?.id))
                         }}
                       >
-                        Chane Plan
+                        Change Plan
                       </Button>
                       <Button
                         color="info"

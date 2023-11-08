@@ -27,7 +27,6 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
   const [invites, setInvites] = useState<invite[]>([]);
   const [processing, setProcessing] = useState(false);
   const [acceptedInviteCount, setAcceptedInviteCount] = useState(0);
-
   useEffect(() => {
     setLoaded(false);
     setError('');
@@ -101,7 +100,7 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
                           <>
                             <Button color="success" disabled={processing} size="small" onClick={() => {
                               setProcessing(true);
-                              const acceptInvite = httpsCallable(functionsInstance, 'fireactjsSaas-acceptInvite');
+                              const acceptInvite = httpsCallable(functionsInstance, 'acceptInvite');
                               acceptInvite({ inviteId: invite.id }).then(() => {
                                 setProcessing(false);
                                 setAcceptedInviteCount(prevState => (prevState + 1));
