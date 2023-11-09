@@ -21,8 +21,7 @@ import {
 } from '@fireactjs/core';
 import { getApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import { BrowserRouter, Routes } from "react-router-dom";
-import { Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
@@ -81,7 +80,6 @@ const Loader = ({ size }: { size: string }) => {
 }
 
 function App() {
-
   // merge pathnames
   for (let key in subPathnames) {
     //@ts-ignore

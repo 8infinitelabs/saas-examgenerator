@@ -19,11 +19,6 @@ admin.initializeApp();
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-export const helloWorld = onRequest((req, res) => {
-  logger.info("Hello logs!", { structuredData: true });
-  res.send("Hello from Call!");
-});
-
 /**
  * create a subscription
  */

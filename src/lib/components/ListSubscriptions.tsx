@@ -40,7 +40,6 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
     }
     let subscriptions: subscription[] = [];
     let invites: invite[] = [];
-
     //const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
     const subscriptionsRef = collection(firestoreInstance, '/subscriptions');
     //const subQuery = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
@@ -65,12 +64,23 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
       })
       setSubscriptions(subscriptions);
       setInvites(invites);
+      if (subscriptions.length >= 1) {
+        navigate('/sub/' + subscriptions[0].id);
+      } else {
+        navigate('/create');
+      }
       setLoaded(true);
     }).catch(error => {
       setLoaded(true);
       setError(error.message);
     })
-  }, [authInstance, config.saas.permissions, acceptedInviteCount, firestoreInstance]);
+  }, [
+    authInstance,
+    config.saas.permissions,
+    acceptedInviteCount,
+    firestoreInstance,
+    navigate,
+  ]);
 
   return (
     <>
