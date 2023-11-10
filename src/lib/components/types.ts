@@ -30,3 +30,4 @@ export interface Plan {
   legacy: boolean
 
 }
+

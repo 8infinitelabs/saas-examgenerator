@@ -17,6 +17,7 @@ import { UpdateBillingDetails } from "./components/UpdateBillingDetails";
 import { UpdateUser } from "./components/UpdateUser";
 import { ChangePlan } from "./components/ChangePlan";
 import { CancelSubscription } from "./components/CancelSubscription";
+import { MainMenu } from "./components/MainMenu";
 
 export {
     AddUser,
@@ -39,4 +40,5 @@ export {
     ListUsers,
     UpdateBillingDetails,
     UpdateUser,
+    MainMenu
 }
