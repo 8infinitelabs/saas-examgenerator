@@ -1,5 +1,5 @@
 {
-  "name": "@fireactjs/saas",
+  "name": "saas",
   "version": "1.2.3",
   "private": false,
   "author": "Chaoming Li",
@@ -21,7 +21,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fireactjs/saas.git"
+    "url": "git+https://github.com/8infinitelabs/saas-examgenerator.git"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -44,9 +44,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
+    "start": "concurrently --kill-others \"vite\" \"npm run --prefix ./functions/ serve\" \"stripe listen -f http://localhost:5001/testing-4a329/us-central1/stripeWebHook\" ",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "echo \"add linting\""
   },
   "eslintConfig": {
     "extends": [
@@ -76,6 +77,7 @@
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
     "@vitejs/plugin-react-swc": "^3.4.1",
+    "concurrently": "^8.2.2",
     "core-js": "^3.33.2",
     "eslint": "^8.52.0",
     "eslint-config-react-app": "^7.0.1",
