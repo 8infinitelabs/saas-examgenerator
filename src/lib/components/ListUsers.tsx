@@ -19,7 +19,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
   const { config } = useContext<any>(FireactContext);
   const pathnames = config.pathnames;
 
-  const { subscription } = useContext(SubscriptionContext);
+  const { subscription } = useContext<any>(SubscriptionContext);
   const subscriptionName = subscription?.name ? subscription?.name : "";
   const [users, setUsers] = useState<User[]>([]);
 
@@ -44,7 +44,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
 
   const [processing, setProcessing] = useState(false);
 
-  const reovkeInvite = useCallback(({ inviteId, subscriptionId }: {inviteId: string, subscriptionId: string}) => {
+  const reovkeInvite = useCallback(({ inviteId, subscriptionId }: { inviteId: string, subscriptionId: string }) => {
     setProcessing(true);
     const revokeInvite = httpsCallable(functionsInstance, 'revokeInvite');
     revokeInvite({
@@ -125,7 +125,7 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'wrap',
-          }}
+        }}
         >
           <Avatar alt={user.displayName} src={user.photoURL || ''} />
           <strong style={{ marginLeft: '15px' }}>
@@ -135,15 +135,15 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
         user.permissionCol = userPermissionLabels(user.permissions);
         user.emailCol = user.email;
         user.actionCol = <Button
-        size="small"
-        variant="outlined"
-        disabled={processing}
-        onClick={() => {
-          reovkeInvite({
-            inviteId: user.id,
-            subscriptionId: subscription?.id
-          });
-        }}>
+          size="small"
+          variant="outlined"
+          disabled={processing}
+          onClick={() => {
+            reovkeInvite({
+              inviteId: user.id,
+              subscriptionId: subscription?.id
+            });
+          }}>
           Revoke Invite
         </Button>
       }
@@ -156,7 +156,6 @@ export const ListUsers = ({ loader }: { loader: JSX.Element }) => {
       window.scrollTo(0, 0);
     }
   }, [page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription?.ownerId, subscription?.id, processing, config.saas.permissions]);
-
 
   return (
     <>

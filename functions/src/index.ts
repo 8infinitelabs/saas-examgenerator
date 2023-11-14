@@ -25,8 +25,6 @@ admin.initializeApp();
 export const createSubscription = onCall((request) => {
   const data = request?.data;
   const context = request?.auth;
-  logger.info(request.data);
-  logger.info(request.auth);
   const stripe = require('stripe')(config.stripe.secret_api_key);
   const paymentMethodId = data?.paymentMethodId || null;
   const billingDetails = data?.billingDetails || null;
@@ -511,3 +509,13 @@ export const stripeWebHook = onRequest((req, res) => {
   }
 })
 
+export const createExam = onCall(async (request) => {
+  const { subscriptionId, questions } = request.data;
+  logger.info("create exam");
+  const doc = admin.firestore().collection('exams');
+  const result = await doc.add({
+    subscriptionId,
+    questions,
+  });
+  return result.id;
+});

@@ -38,7 +38,8 @@ import {
   ManagePaymentMethods,
   ChangePlan,
   CancelSubscription,
-  UpdateBillingDetails
+  UpdateBillingDetails,
+  CreateExam
 } from './lib';
 import SaaSConfig from './config.json';
 import { useEffect } from 'react';
@@ -119,7 +120,7 @@ function App() {
                 {/* @ts-ignore */}
                 <Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
                   <Route element={<PermissionRouter permissions={["access"]} />} >
-                    <Route path={pathnames.Subscription + "/"} element={<div>Home</div>} />
+                    <Route path={pathnames.Subscription + "/"} element={<CreateExam/>}/>
                   </Route>
                   <Route element={<PermissionRouter permissions={["admin"]} />} >
                     {/* @ts-ignore */}

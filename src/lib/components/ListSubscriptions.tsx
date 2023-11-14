@@ -73,7 +73,7 @@ export const ListSubscriptions = ({ loader }: { loader: JSX.Element }) => {
     }).catch(error => {
       setLoaded(true);
       setError(error.message);
-    })
+    });
   }, [
     authInstance,
     config.saas.permissions,
