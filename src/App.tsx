@@ -5,7 +5,6 @@ import {
   AppTemplate,
   AuthProvider,
   AuthRoutes,
-  MainMenu,
   PublicTemplate,
   ResetPassword,
   SignIn,
@@ -39,7 +38,8 @@ import {
   ChangePlan,
   CancelSubscription,
   UpdateBillingDetails,
-  CreateExam
+  CreateExam,
+  MainMenu,
 } from './lib';
 import SaaSConfig from './config.json';
 import { useEffect } from 'react';

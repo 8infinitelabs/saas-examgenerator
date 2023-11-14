@@ -2,7 +2,7 @@
 	"google": true,
 	"facebook": true,
 	"microsoft": true,
-	"apple": false,
+	"apple": true,
 	"twitter": true,
 	"github": true
 }
