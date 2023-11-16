@@ -42,6 +42,8 @@ import {
 } from './lib';
 import SaaSConfig from './config.json';
 import { useEffect } from 'react';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 
 const Brand = "FIREACT";
 
@@ -95,8 +97,12 @@ function App() {
   }
 
   useEffect(() => {
-    const functions = getFunctions(getApp());
-    connectFunctionsEmulator(functions, "localhost", 5001);
+    if (import.meta.env.DEV) {
+      const functions = getFunctions(getApp());
+      connectFunctionsEmulator(functions, "localhost", 5001);
+      connectAuthEmulator(getAuth(), "http://127.0.0.1:9099");
+      connectFirestoreEmulator(getFirestore(), '127.0.0.1', 8080);
+    }
   }, []);
 
   return (
