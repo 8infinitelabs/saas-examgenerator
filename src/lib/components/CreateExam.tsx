@@ -3,11 +3,11 @@ import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Button, Container, Paper, Stack, Typography } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
 import { question } from "./types";
-import { SubscriptionContext } from "./SubscriptionContext";
+import { useParams } from "react-router-dom";
 
 export const CreateExam = () => {
   const { functionsInstance } = useContext<any>(AuthContext);
-  const { subscriptionId } = useContext<any>(SubscriptionContext);
+  const { subscriptionId } = useParams();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string>('');
   const [examUrl, setExamUrl] = useState<string>('');

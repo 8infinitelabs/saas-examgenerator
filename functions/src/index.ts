@@ -1,5 +1,5 @@
 import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+//import * as logger from "firebase-functions/logger";
 import admin from "firebase-admin";
 import config from "../config.json";
 import {
@@ -13,6 +13,7 @@ import {
   updateInvoice,
   updateSubscription
 } from "./utils";
+import { question } from "./types";
 
 admin.initializeApp();
 
@@ -511,11 +512,35 @@ export const stripeWebHook = onRequest((req, res) => {
 
 export const createExam = onCall(async (request) => {
   const { subscriptionId, questions } = request.data;
-  logger.info("create exam");
   const doc = admin.firestore().collection('exams');
   const result = await doc.add({
     subscriptionId,
     questions,
   });
   return result.id;
+});
+
+export const verifyExam = onCall(async (request) => {
+  const { answers, examId } = request.data;
+  const doc = admin.firestore().collection('exams').where(admin.firestore.FieldPath.documentId(), '==', examId);
+  try {
+    let correctAnswers = 0;
+    const exams = await doc.get();
+    if (exams.empty) {
+      throw new HttpsError('internal', 'not found');
+    }
+    exams.forEach((exam) => {
+      const data: question[] = exam.get('questions');
+      for (let i = 0; i < data.length; i++) {
+        const q = data[i];
+        const answer = answers[i];
+        if (q.correctAnswer === answer) {
+          correctAnswers++;
+        }
+      }
+    });
+    return correctAnswers;
+  } catch (err: any) {
+    throw new HttpsError('internal', err.message);
+  }
 });

@@ -24,5 +24,11 @@ service cloud.firestore {
 		match /invites/{inviteId} {
     	allow read, delete: if request.auth.uid != null && request.auth.token.email == resource.data.email;
 		}
+    match /exams/{examId} {
+      allow read: if request != null;
+      allow delete: if request.auth != null && 
+        request.auth.uid != null &&
+        request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(resource.data.subscriptionId)).data.permissions.admin;
+    }
   }
 }
