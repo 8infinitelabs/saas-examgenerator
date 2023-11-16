@@ -21,12 +21,20 @@ export const CreateExam = () => {
         type: "binary",
         question: "Is this working?",
         correctAnswer: "true",
+        answers: [
+          "true",
+          "false"
+        ],
       },
       {
         category: "testing",
         type: "binary",
         question: "Is this really working?",
         correctAnswer: "true",
+        answers: [
+          "true",
+          "false"
+        ],
       }
     ];
     const createExam = httpsCallable(functionsInstance, 'createExam');
