@@ -44,7 +44,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"vite\" \"npm run --prefix ./functions/ serve\" \"stripe listen -f http://localhost:5001/testing-4a329/us-central1/stripeWebHook\" ",
+    "start": "concurrently --kill-others \"vite --port 5173\" \"npm run --prefix ./functions/ serve\" \"stripe listen -f http://localhost:5001/testing-4a329/us-central1/stripeWebHook\" ",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "echo \"add linting\""

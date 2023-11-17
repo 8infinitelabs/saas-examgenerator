@@ -23,6 +23,8 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
   const { config } = useContext<any>(FireactContext);
   const navigate = useNavigate();
 
+  const currentUser = auth!.currentUser;
+  const uid = currentUser!.uid;
 
   useEffect(() => {
     setLoeaded(false);
@@ -51,7 +53,7 @@ export const ManagePaymentMethods = ({ loader }: { loader: JSX.Element }) => {
       setError(err.message);
       setLoeaded(true);
     })
-  }, [auth!.currentUser!.uid, firestoreInstance]);
+  }, [auth, currentUser, uid, firestoreInstance]);
 
   return (
     <>
