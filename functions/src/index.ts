@@ -18,9 +18,6 @@ import {
 import { questionType } from "./types";
 
 const OPENAI_API_KEY = defineString('OPENAI_API_KEY');
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY as any,
-});
 
 admin.initializeApp();
 
@@ -519,6 +516,11 @@ export const stripeWebHook = onRequest((req, res) => {
 
 export const createQuestions = onCall(async (request) => {
   const { prompt } = request.data;
+  
+  const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY.value(),
+  });
+
   const chatCompletion = await openai.chat.completions.create({
     messages: [
       {

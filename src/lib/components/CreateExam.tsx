@@ -42,7 +42,6 @@ export const CreateExam = () => {
   const submitExam = () => {
     setProcessing(true);
     setError('');
-    console.log('questions in submit', questions)
     const createExam = httpsCallable(functionsInstance, 'createExam');
     const data: questionType = {
      questions,
@@ -62,11 +61,14 @@ export const CreateExam = () => {
 
   const createQuesions = async () => {
     const createQuestion = httpsCallable(functionsInstance, 'createQuestions');
-    const a = await createQuestion({
+    let result: any = await createQuestion({
       prompt,
     });
-    console.log('createdQuestion', a);
-    setQuestions(a.data as question[]);
+    result = JSON.parse(result.data[0].message.content);
+    if (result?.questions?.length) {
+      result = result.questions;
+    }
+    setQuestions(result as question[]);
   };
   const handleNumberInput = (
     min: number,
