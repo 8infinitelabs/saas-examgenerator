@@ -22,18 +22,18 @@ export const UpdateBillingDetails = ({ loader }: { loader: JSX.Element }) => {
   const [processing, setProcessing] = useState(false);
   const [succss, setSuccess] = useState(false);
   const { functionsInstance } = useContext<any>(AuthContext);
-
+  const uid = auth.currentUser?.uid;
   useEffect(() => {
     setLoeaded(false);
     setError('');
-    getDoc(doc(firestoreInstance, 'users/' + auth.currentUser!.uid)).then(doc => {
+    getDoc(doc(firestoreInstance, 'users/' + uid)).then(doc => {
       setBillingDetails(doc.data()!.billingDetails);
       setLoeaded(true);
     }).catch(err => {
       setError(err.message);
       setLoeaded(true);
     })
-  }, [auth.currentUser!.uid, firestoreInstance]);
+  }, [uid, firestoreInstance]);
 
   return (
     <>
