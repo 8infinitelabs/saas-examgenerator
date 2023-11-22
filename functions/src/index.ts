@@ -1,6 +1,8 @@
 import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
+import { defineString } from 'firebase-functions/params';
 //import * as logger from "firebase-functions/logger";
 import admin from "firebase-admin";
+import { OpenAI } from "openai";
 import config from "../config.json";
 import {
   addUserToSubscription,
@@ -13,7 +15,12 @@ import {
   updateInvoice,
   updateSubscription
 } from "./utils";
-import { question } from "./types";
+import { questionType } from "./types";
+
+const OPENAI_API_KEY = defineString('OPENAI_API_KEY');
+const openai = new OpenAI({
+  apiKey: OPENAI_API_KEY as any,
+});
 
 admin.initializeApp();
 
@@ -508,7 +515,30 @@ export const stripeWebHook = onRequest((req, res) => {
   } catch (err: any) {
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
-})
+});
+
+export const createQuestions = onCall(async (request) => {
+  const { prompt } = request.data;
+  const chatCompletion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: 'system',
+        content: 'Generate an array of exam questions based on the following JSON schema: [{"question":"string","answers":["string1","string2","string3"],"correctAnswer": "string1","answerExplanation":"string"]}'
+      },
+      { role: 'user', content: prompt }
+    ],
+    //change model to gpt-3.5-turbo after December 11 of 2023
+    //after that date json mode will be available in the
+    //normal gpt 3.5 model
+    model: 'gpt-3.5-turbo-1106',
+    //@ts-ignore
+    response_format: {
+      type: 'json_object'
+    },
+  });
+  //use the chatCompletion.usage to calculate the saas usage
+  return chatCompletion.choices
+});
 
 export const createExam = onCall(async (request) => {
   const { subscriptionId, questions } = request.data;
@@ -530,9 +560,9 @@ export const verifyExam = onCall(async (request) => {
       throw new HttpsError('internal', 'not found');
     }
     exams.forEach((exam) => {
-      const data: question[] = exam.get('questions');
-      for (let i = 0; i < data.length; i++) {
-        const q = data[i];
+      const data: questionType = exam.get('questions');
+      for (let i = 0; i < data.questions.length; i++) {
+        const q = data.questions[i];
         const answer = answers[i];
         if (q.correctAnswer === answer) {
           correctAnswers++;
