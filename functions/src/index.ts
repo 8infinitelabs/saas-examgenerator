@@ -15,7 +15,7 @@ import {
   updateInvoice,
   updateSubscription
 } from "./utils";
-import { questionType } from "./types";
+import { answer } from "./types";
 
 const OPENAI_API_KEY = defineString('OPENAI_API_KEY');
 
@@ -525,11 +525,11 @@ export const createQuestions = onCall(async (request) => {
     messages: [
       {
         role: 'system',
-        content: 'Generate an array of exam questions based on the following JSON schema: [{"question":"string","answers":["string1","string2","string3"],"correctAnswer": "string1","answerExplanation":"string"]}'
+        content: 'Generate an array of exam questions based on the following JSON schema: [{"correctAnswer":"string1","answerExplanation":"string","questionData":{"question":"string","answers":["string1","string2","string3"]}}]'
       },
       { role: 'user', content: prompt }
     ],
-    //change model to gpt-3.5-turbo after December 11 of 2023
+    //TODO: change model to gpt-3.5-turbo after December 11 of 2023
     //after that date json mode will be available in the
     //normal gpt 3.5 model
     model: 'gpt-3.5-turbo-1106',
@@ -543,18 +543,23 @@ export const createQuestions = onCall(async (request) => {
 });
 
 export const createExam = onCall(async (request) => {
-  const { subscriptionId, questions } = request.data;
-  const doc = admin.firestore().collection('exams');
-  const result = await doc.add({
+  const { subscriptionId, questions, answers } = request.data;
+  const exam = admin.firestore().collection('exams');
+  const examAnswers = admin.firestore().collection('examAnswers');
+  const result = await exam.add({
     subscriptionId,
     questions,
+  });
+  await examAnswers.add({
+    answers,
+    examId: result.id,
   });
   return result.id;
 });
 
 export const verifyExam = onCall(async (request) => {
   const { answers, examId } = request.data;
-  const doc = admin.firestore().collection('exams').where(admin.firestore.FieldPath.documentId(), '==', examId);
+  const doc = admin.firestore().collection('examAnswers').where('examId', '==', examId);
   try {
     let correctAnswers = 0;
     const exams = await doc.get();
@@ -562,11 +567,11 @@ export const verifyExam = onCall(async (request) => {
       throw new HttpsError('internal', 'not found');
     }
     exams.forEach((exam) => {
-      const data: questionType = exam.get('questions');
-      for (let i = 0; i < data.questions.length; i++) {
-        const q = data.questions[i];
+      const data: answer[] = exam.get('answers');
+      for (let i = 0; i < data.length; i++) {
+        const correctAnswer  = data[i];
         const answer = answers[i];
-        if (q.correctAnswer === answer) {
+        if (correctAnswer.correctAnswer === answer) {
           correctAnswers++;
         }
       }

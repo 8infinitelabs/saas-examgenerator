@@ -33,10 +33,15 @@ export interface Plan {
 export type question = {
   question: string,
   answers: string[],
-  correctAnswer?: string,
 }
 
 export type questionType = {
   category: string,
   questions: question[],
 };
+
+export type chatgptSchema = {
+  questionData: question,
+  correctAnswer: string,
+  answerExplanation: string
+}

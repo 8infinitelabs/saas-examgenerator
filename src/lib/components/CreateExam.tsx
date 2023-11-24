@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
-import { questionType, question } from "./types";
+import { questionType, chatgptSchema, question } from "./types";
 import { useParams } from "react-router-dom";
 
 const minAnswer = 2;
@@ -31,11 +31,12 @@ export const CreateExam = () => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string>('');
   const [examUrl, setExamUrl] = useState<string>('');
-  const [questions, setQuestions] = useState<question[]>([]);
+  const [exam, setExam] = useState<chatgptSchema[]>([]);
   const [trueOrFalse, setTrueOrFalse] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
   const [numQuestion, setNumQuestions] = useState<number>(2);
   const [numAnswers, setNumAnswers] = useState<number>(2);
+  //TODO: Add some kind of difficulty level
   const prompt =
     `create an ${category} exam with ${numQuestion} question, each question should have ${trueOrFalse? 'only 2 true or false' :numAnswers} answers`;
 
@@ -43,6 +44,18 @@ export const CreateExam = () => {
     setProcessing(true);
     setError('');
     const createExam = httpsCallable(functionsInstance, 'createExam');
+    let answers: {
+      correctAnswer: string,
+      answerExplanation: string,
+    }[] = [];
+    let questions: question[] = [];
+    exam.forEach((q) => {
+      questions.push(q.questionData);
+      answers.push({
+        correctAnswer: q.correctAnswer,
+        answerExplanation: q.answerExplanation, 
+      });
+    });
     const data: questionType = {
      questions,
      category,
@@ -50,6 +63,7 @@ export const CreateExam = () => {
     createExam({
       subscriptionId,
       questions: data,
+      answers,
     }).then((res: any) => {
       setExamUrl(res.data);
       setProcessing(false);
@@ -60,16 +74,30 @@ export const CreateExam = () => {
   }
 
   const createQuesions = async () => {
-    const createQuestion = httpsCallable(functionsInstance, 'createQuestions');
-    let result: any = await createQuestion({
-      prompt,
-    });
-    result = JSON.parse(result.data[0].message.content);
-    if (result?.questions?.length) {
-      result = result.questions;
+    setProcessing(true);
+    try {
+      const createQuestion = httpsCallable(functionsInstance, 'createQuestions');
+      let result: any = await createQuestion({
+          prompt,
+          });
+      let data = JSON.parse(result.data[0].message.content);
+      const keys = Object.keys(data);
+      console.log(keys);
+      if (keys[0] !== '0') {
+        console.log('got here')
+        data = data[keys[0]];
+      }
+      console.log(result);
+      console.log(data);
+      setExam(data as chatgptSchema[]);
+      setProcessing(false);
+    } catch(err: any) {
+      setError(err.message);
+      console.log(err.message);
+      setProcessing(false);
     }
-    setQuestions(result as question[]);
   };
+
   const handleNumberInput = (
     min: number,
     max: number,
