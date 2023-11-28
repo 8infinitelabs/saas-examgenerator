@@ -27,5 +27,9 @@ service cloud.firestore {
     match /exams/{examId} {
       allow read: if request != null;
     }
+		match /examMetrics/{examId} {
+    	allow get: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(resource.data.subscriptionId)).data.permissions.access;
+    	allow list: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(resource.data.subscriptionId)).data.permissions.access;
+    }
   }
 }

@@ -21,8 +21,6 @@ import {
 import { getApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
 import {
   CreateSubscription,
@@ -40,6 +38,9 @@ import {
   UpdateBillingDetails,
   CreateExam,
   MainMenu,
+  Loader,
+  Logo,
+  Metrics,
 } from './lib';
 import SaaSConfig from './config.json';
 import { useEffect } from 'react';
@@ -47,40 +48,6 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 
 const Brand = "FIREACT";
-
-const Logo = ({ size, color }: { size: string, color?: string }) => {
-  const logoColor = color || 'warning';
-  return (
-    //@ts-ignore
-    <LocalFireDepartmentIcon color={logoColor} fontSize={size} />
-  );
-}
-
-const Loader = ({ size }: { size: string }) => {
-  let cpSize = "35px";
-  switch (size) {
-    case "small":
-      cpSize = "30px";
-      break;
-    case "medium":
-      cpSize = "35px";
-      break;
-    case "large":
-      cpSize = "45px";
-      break;
-    default:
-      cpSize = "35px";
-      break;
-  }
-  return (
-    <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-      <CircularProgress color="warning" size={cpSize} />
-      <div style={{ position: "absolute" }}>
-        <Logo size={size} />
-      </div>
-    </Box>
-  );
-}
 
 function App() {
   // merge pathnames
@@ -127,6 +94,7 @@ function App() {
                 <Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
                   <Route element={<PermissionRouter permissions={["access"]} />} >
                     <Route path={pathnames.Subscription + "/"} element={<CreateExam/>}/>
+                    <Route path={pathnames.Metrics} element={<Metrics/>} />
                   </Route>
                   <Route element={<PermissionRouter permissions={["admin"]} />} >
                     {/* @ts-ignore */}

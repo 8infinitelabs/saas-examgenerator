@@ -19,6 +19,9 @@ import { ChangePlan } from "./components/ChangePlan";
 import { CancelSubscription } from "./components/CancelSubscription";
 import { CreateExam } from "./components/CreateExam";
 import { MainMenu } from "./components/MainMenu";
+import { Logo } from "./components/Logo";
+import { Loader } from "./components/Loader";
+import { Metrics } from "./components/Metrics";
 
 export {
   AddUser,
@@ -43,4 +46,7 @@ export {
   UpdateUser,
   CreateExam,
   MainMenu,
+  Loader,
+  Logo,
+  Metrics,
 }

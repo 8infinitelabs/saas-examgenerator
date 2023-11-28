@@ -29,16 +29,29 @@ export const SubscriptionMenu = ({ customItems }: any) => {
   return (
     <List component="nav">
       {checkPermission(subscription, authInstance.currentUser.uid, defaultPermissions) &&
-        <NavLink
-          to={pathnames.Subscription.replace(":subscriptionId", subscription?.id)}
-          style={{ textDecoration: 'none' }}
-          key="dashboard"
-        >
-          <ListItemButton>
-            <ListItemIcon><DashboardIcon /></ListItemIcon>
-            <ListItemText primary={<Typography color="textPrimary">Dashboard</Typography>} />
-          </ListItemButton>
-        </NavLink>
+        <>
+          <NavLink
+            to={pathnames.Subscription.replace(":subscriptionId", subscription?.id)}
+            style={{ textDecoration: 'none' }}
+            key="dashboard"
+          >
+            <ListItemButton>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary={<Typography color="textPrimary">Dashboard</Typography>} />
+            </ListItemButton>
+          </NavLink>
+          <Divider key="dashboard-divider" />
+          <NavLink
+            to={pathnames.Metrics.replace(":subscriptionId", subscription?.id)}
+            style={{ textDecoration: 'none' }}
+            key="metrics"
+          >
+            <ListItemButton>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary={<Typography color="textPrimary">Metrics</Typography>} />
+            </ListItemButton>
+          </NavLink>
+        </>
       }
       {customItems}
       {checkPermission(subscription, authInstance.currentUser.uid, adminPermissions) &&

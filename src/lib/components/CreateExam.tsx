@@ -38,7 +38,7 @@ export const CreateExam = () => {
   const [numAnswers, setNumAnswers] = useState<number>(2);
   //TODO: Add some kind of difficulty level
   const prompt =
-    `create an ${category} exam with ${numQuestion} question, each question should have ${trueOrFalse? 'only 2 true or false' :numAnswers} answers`;
+    `create an ${category} exam with ${numQuestion} question, each question should have ${trueOrFalse ? 'only 2 true or false' : numAnswers} answers`;
 
   const submitExam = () => {
     setProcessing(true);
@@ -53,12 +53,12 @@ export const CreateExam = () => {
       questions.push(q.questionData);
       answers.push({
         correctAnswer: q.correctAnswer,
-        answerExplanation: q.answerExplanation, 
+        answerExplanation: q.answerExplanation,
       });
     });
     const data: questionType = {
-     questions,
-     category,
+      questions,
+      category,
     };
     createExam({
       subscriptionId,
@@ -74,12 +74,13 @@ export const CreateExam = () => {
   }
 
   const createQuesions = async () => {
+
     setProcessing(true);
     try {
       const createQuestion = httpsCallable(functionsInstance, 'createQuestions');
       let result: any = await createQuestion({
-          prompt,
-          });
+        prompt,
+      });
       let data = JSON.parse(result.data[0].message.content);
       const keys = Object.keys(data);
       console.log(keys);
@@ -91,7 +92,7 @@ export const CreateExam = () => {
       console.log(data);
       setExam(data as chatgptSchema[]);
       setProcessing(false);
-    } catch(err: any) {
+    } catch (err: any) {
       setError(err.message);
       console.log(err.message);
       setProcessing(false);

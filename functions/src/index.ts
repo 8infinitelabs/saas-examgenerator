@@ -16,6 +16,7 @@ import {
   updateSubscription
 } from "./utils";
 import { answer } from "./types";
+import { FieldValue } from "firebase-admin/firestore";
 
 const OPENAI_API_KEY = defineString('OPENAI_API_KEY');
 
@@ -533,6 +534,7 @@ export const createQuestions = onCall(async (request) => {
     //after that date json mode will be available in the
     //normal gpt 3.5 model
     model: 'gpt-3.5-turbo-1106',
+    // model: 'gpt-3.5-turbo',
     //@ts-ignore
     response_format: {
       type: 'json_object'
@@ -546,6 +548,7 @@ export const createExam = onCall(async (request) => {
   const { subscriptionId, questions, answers } = request.data;
   const exam = admin.firestore().collection('exams');
   const examAnswers = admin.firestore().collection('examAnswers');
+  const examMetrics = admin.firestore().collection('examMetrics');
   const result = await exam.add({
     subscriptionId,
     questions,
@@ -554,12 +557,20 @@ export const createExam = onCall(async (request) => {
     answers,
     examId: result.id,
   });
+  await examMetrics.add({
+    subscriptionId,
+    examId: result.id,
+    timesTaken: 0,
+    timesPassed: 0,
+    timesFailed: 0,
+  });
   return result.id;
 });
 
 export const verifyExam = onCall(async (request) => {
   const { answers, examId } = request.data;
   const doc = admin.firestore().collection('examAnswers').where('examId', '==', examId);
+  const metrics = admin.firestore().collection('examMetrics').where('examId', '==', examId);
   try {
     let correctAnswers = 0;
     const exams = await doc.get();
@@ -568,6 +579,7 @@ export const verifyExam = onCall(async (request) => {
     }
     exams.forEach((exam) => {
       const data: answer[] = exam.get('answers');
+      data.length
       for (let i = 0; i < data.length; i++) {
         const correctAnswer  = data[i];
         const answer = answers[i];
@@ -576,6 +588,20 @@ export const verifyExam = onCall(async (request) => {
         }
       }
     });
+    const score = parseInt(((correctAnswers / exams.size) * 100).toFixed(0));
+    const metricQuery = await metrics.get();
+    const metricsDoc = metricQuery.docs[0].ref;
+    if (score > 40) {
+      metricsDoc.update({
+        timesTaken: FieldValue.increment(1),
+        timesPassed: FieldValue.increment(1),
+      });
+    } else {
+      metricsDoc.update({
+        timesTaken: FieldValue.increment(1),
+        timesFailed: FieldValue.increment(1),
+      });
+    }
     return correctAnswers;
   } catch (err: any) {
     throw new HttpsError('internal', err.message);
