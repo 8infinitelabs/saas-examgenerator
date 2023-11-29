@@ -526,7 +526,7 @@ export const createQuestions = onCall(async (request) => {
     messages: [
       {
         role: 'system',
-        content: 'Generate an array of exam questions based on the following JSON schema: [{"correctAnswer":"string1","answerExplanation":"string","questionData":{"question":"string","answers":["string1","string2","string3"]}}]'
+        content: 'Generate a JSON array to structure an exam with the specified schema: [{"correctAnswer":"string1","answerExplanation":"string","questionData":{"question":"string","answers":["string1","string2","string3"]}}]'
       },
       { role: 'user', content: prompt }
     ],
@@ -563,12 +563,13 @@ export const createExam = onCall(async (request) => {
     timesTaken: 0,
     timesPassed: 0,
     timesFailed: 0,
+    students: {},
   });
   return result.id;
 });
 
 export const verifyExam = onCall(async (request) => {
-  const { answers, examId } = request.data;
+  const { answers, examId, uid } = request.data;
   const doc = admin.firestore().collection('examAnswers').where('examId', '==', examId);
   const metrics = admin.firestore().collection('examMetrics').where('examId', '==', examId);
   try {
@@ -577,29 +578,39 @@ export const verifyExam = onCall(async (request) => {
     if (exams.empty) {
       throw new HttpsError('internal', 'not found');
     }
+    let examLength = 0;
     exams.forEach((exam) => {
       const data: answer[] = exam.get('answers');
-      data.length
-      for (let i = 0; i < data.length; i++) {
-        const correctAnswer  = data[i];
+      examLength = data.length;
+      for (let i = 0; i < examLength; i++) {
+        const correctAnswer = data[i];
         const answer = answers[i];
         if (correctAnswer.correctAnswer === answer) {
           correctAnswers++;
         }
       }
     });
-    const score = parseInt(((correctAnswers / exams.size) * 100).toFixed(0));
+    const score = parseInt(((correctAnswers / examLength) * 100).toFixed(0));
     const metricQuery = await metrics.get();
     const metricsDoc = metricQuery.docs[0].ref;
+    const path = `students.${uid}`; 
     if (score > 40) {
       metricsDoc.update({
         timesTaken: FieldValue.increment(1),
         timesPassed: FieldValue.increment(1),
+        [path]: {
+          answers,
+          correctAnswers,
+        },
       });
     } else {
       metricsDoc.update({
         timesTaken: FieldValue.increment(1),
         timesFailed: FieldValue.increment(1),
+        [path]: {
+          answers,
+          correctAnswers,
+        },
       });
     }
     return correctAnswers;

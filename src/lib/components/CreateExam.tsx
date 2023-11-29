@@ -38,7 +38,7 @@ export const CreateExam = () => {
   const [numAnswers, setNumAnswers] = useState<number>(2);
   //TODO: Add some kind of difficulty level
   const prompt =
-    `create an ${category} exam with ${numQuestion} question, each question should have ${trueOrFalse ? 'only 2 true or false' : numAnswers} answers`;
+    `Create a ${category} exam with ${numQuestion} questions, and for each question, provide the correct answer, an answer explanation, a question statement, and ${numAnswers} answer options. Ensure that the generated output follows the specified JSON schema.`;
 
   const submitExam = () => {
     setProcessing(true);
@@ -135,7 +135,7 @@ export const CreateExam = () => {
               <Alert severity="error">{error}</Alert>
             }
             {examUrl &&
-              <Alert severity="success">http://localhost:porthere/{examUrl}</Alert>
+              <Alert severity="success">http://localhost:5174/{examUrl}</Alert>
             }
           </Stack>
         </Box>
