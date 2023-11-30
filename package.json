@@ -26,6 +26,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@fireactjs/core": "^1.1.1",
+    "@mui/x-data-grid": "^6.18.2",
     "@stripe/react-stripe-js": "^1.15.0",
     "@stripe/stripe-js": "^1.44.1",
     "firebase-admin": "^11.11.0",

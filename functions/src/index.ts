@@ -552,6 +552,7 @@ export const createExam = onCall(async (request) => {
   const result = await exam.add({
     subscriptionId,
     questions,
+    examLength: answers.length,
   });
   await examAnswers.add({
     answers,
@@ -564,6 +565,7 @@ export const createExam = onCall(async (request) => {
     timesPassed: 0,
     timesFailed: 0,
     students: {},
+    examLength: answers.length,
   });
   return result.id;
 });
