@@ -36,6 +36,7 @@ export const CreateExam = () => {
   const [category, setCategory] = useState<string>('');
   const [numQuestion, setNumQuestions] = useState<number>(2);
   const [numAnswers, setNumAnswers] = useState<number>(2);
+  //TODO: Add a option for an specific theme
   //TODO: Add some kind of difficulty level
   const prompt =
     `Create a ${category} exam with ${numQuestion} questions, and for each question, provide the correct answer, an answer explanation, a question statement, and ${numAnswers} answer options. Ensure that the generated output follows the specified JSON schema.`;
@@ -74,7 +75,6 @@ export const CreateExam = () => {
   }
 
   const createQuesions = async () => {
-
     setProcessing(true);
     try {
       const createQuestion = httpsCallable(functionsInstance, 'createQuestions');
