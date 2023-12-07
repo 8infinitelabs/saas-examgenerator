@@ -28,6 +28,7 @@ admin.initializeApp();
 /**
  * create a subscription
  */
+
 export const createSubscription = onCall((request) => {
   const data = request?.data;
   const context = request?.auth;
@@ -517,7 +518,7 @@ export const stripeWebHook = onRequest((req, res) => {
 
 export const createQuestions = onCall(async (request) => {
   const { prompt } = request.data;
-  
+
   const openai = new OpenAI({
     apiKey: OPENAI_API_KEY.value(),
   });
@@ -545,7 +546,12 @@ export const createQuestions = onCall(async (request) => {
 });
 
 export const createExam = onCall(async (request) => {
-  const { subscriptionId, questions, answers } = request.data;
+  const {
+    subscriptionId,
+    questions,
+    answers,
+    name,
+  } = request.data;
   const exam = admin.firestore().collection('exams');
   const examAnswers = admin.firestore().collection('examAnswers');
   const examMetrics = admin.firestore().collection('examMetrics');
@@ -553,6 +559,7 @@ export const createExam = onCall(async (request) => {
     subscriptionId,
     questions,
     examLength: answers.length,
+    name,
   });
   await examAnswers.add({
     answers,
@@ -566,14 +573,16 @@ export const createExam = onCall(async (request) => {
     timesFailed: 0,
     students: {},
     examLength: answers.length,
+    name,
   });
   return result.id;
 });
 
 export const verifyExam = onCall(async (request) => {
-  const { answers, examId, uid } = request.data;
+  const { answers, examId, user } = request.data;
   const doc = admin.firestore().collection('examAnswers').where('examId', '==', examId);
   const metrics = admin.firestore().collection('examMetrics').where('examId', '==', examId);
+  const userAnswers: { value: string, isCorrect: boolean }[] = []
   try {
     let correctAnswers = 0;
     const exams = await doc.get();
@@ -589,30 +598,34 @@ export const verifyExam = onCall(async (request) => {
         const answer = answers[i];
         if (correctAnswer.correctAnswer === answer) {
           correctAnswers++;
+          userAnswers.push({ isCorrect: true, value: answer });
+        } else {
+          userAnswers.push({ isCorrect: false, value: answer });
         }
       }
     });
     const score = parseInt(((correctAnswers / examLength) * 100).toFixed(0));
     const metricQuery = await metrics.get();
     const metricsDoc = metricQuery.docs[0].ref;
-    const path = `students.${uid}`; 
+    const path = `students.${user.uid}`;
+    const data = {
+      [path]: {
+        answers: userAnswers,
+        correctAnswers,
+        user,
+      }
+    };
     if (score > 40) {
       metricsDoc.update({
         timesTaken: FieldValue.increment(1),
         timesPassed: FieldValue.increment(1),
-        [path]: {
-          answers,
-          correctAnswers,
-        },
+        ...data,
       });
     } else {
       metricsDoc.update({
         timesTaken: FieldValue.increment(1),
         timesFailed: FieldValue.increment(1),
-        [path]: {
-          answers,
-          correctAnswers,
-        },
+        ...data,
       });
     }
     return correctAnswers;

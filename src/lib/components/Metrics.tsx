@@ -8,14 +8,17 @@ import {
   Alert,
   Box,
   Container,
+  Grid,
+  Link,
   Paper,
   Stack,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import ClearIcon from '@mui/icons-material/Clear';
 import { AuthContext } from "@fireactjs/core";
-import { Loader } from "./Loader";
 import {
   collection,
   DocumentData,
@@ -24,6 +27,29 @@ import {
   QueryDocumentSnapshot,
   where,
 } from "firebase/firestore";
+import { Loader } from "./Loader";
+
+type studentType = {
+  answers: { value: string, isCorrect: boolean }[],
+  correctAnswers: number
+  user: {
+    email: string,
+    name: string,
+    photoURL: string,
+    uid: string,
+  },
+}
+type metric = {
+  timesFailed: number,
+  examId: string,
+  subscriptionId: string,
+  students: {
+    [key: string]: studentType,
+  },
+  timesPassed: number,
+  timesTaken: number,
+  examLength: number,
+}
 
 export const Metrics = () => {
   const { firestoreInstance } = useContext<any>(AuthContext);
@@ -33,12 +59,18 @@ export const Metrics = () => {
   const [metrics, setMetrics] = useState<QueryDocumentSnapshot<DocumentData, DocumentData>[]>([]);
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 200},
+    { field: 'id', headerName: 'ID', width: 50, },
+    { field: 'name', headerName: 'Name', width: 200 },
     {
       field: 'answers',
       headerName: 'Answers',
       width: 200,
-      valueFormatter: ({ value }: { value: string[] }) => value.toString(),
+      // @ts-ignore
+      valueFormatter: (data: any) => {
+        const value: { value: string, isCorrect: boolean }[] = data.value;
+        const onlyAnswers = value.map((item) => item.value);
+        return onlyAnswers.join(', ');
+      },
     },
     { field: 'correctAnswers', headerName: 'Correct Answers', type: 'number', width: 130, },
     { field: 'score', headerName: 'Score', type: 'number', width: 130, },
@@ -75,24 +107,13 @@ export const Metrics = () => {
           <Stack spacing={3}>
             {metrics.map((data) => {
               const examId = data.get('examId');
-              const metric: {
-                timesFailed: number,
-                examId: string,
-                subscriptionId: string,
-                students: {
-                  [key: string]: {
-                    answers: string[],
-                    correctAnswers: number
-                  }
-                },
-                timesPassed: number,
-                timesTaken: number,
-                examLength: number,
-              } = data.data() as any;
+              const name = data.get('name');
+              const metric: metric = data.data() as any;
               const students = Object.keys(metric.students);
               const rows = students.map((id) => {
                 return {
                   id,
+                  name: metric.students[id].user.name,
                   correctAnswers: metric.students[id].correctAnswers,
                   score: parseInt(((metric.students[id].correctAnswers / metric.examLength) * 10).toFixed(0)),
                   answers: metric.students[id].answers,
@@ -105,7 +126,12 @@ export const Metrics = () => {
                     aria-controls="panel1a-content"
                     id={examId}
                   >
-                    <Typography>ExamId: {examId} number of questions: {metric.examLength}</Typography>
+                    <Typography>
+                      Exam: {name} number of questions: {metric.examLength} |&nbsp;
+                      <Link target='_blank' href={`http://localhost:5174/${examId}`}>
+                        http://localhost:5174/{examId}
+                      </Link>
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
 
@@ -124,6 +150,36 @@ export const Metrics = () => {
                         pageSizeOptions={[5, 10]}
                       />
                     </div>
+
+                    {students.map((id) => {
+                      const student: studentType = metric.students[id];
+                      const answers = student.answers.map((answer) => (
+                        <Typography>
+                          {answer.value} | {answer.isCorrect
+                            ? <CheckBoxIcon color='success' />
+                            : <ClearIcon color='error' />}
+                        </Typography>
+                      ));
+                      return (
+                        <Accordion key={id}>
+                          <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id={id}
+                          >
+                            <Typography>
+                              Answers of: {student.user.name}
+                            </Typography>
+                          </AccordionSummary>
+
+                          <AccordionDetails>
+                            <Grid>
+                              {answers}
+                            </Grid>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    })}
                   </AccordionDetails>
                 </Accordion>
               );

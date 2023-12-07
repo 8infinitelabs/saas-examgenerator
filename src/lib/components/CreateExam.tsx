@@ -17,8 +17,8 @@ import {
   Typography,
 } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
-import { questionType, chatgptSchema, question } from "./types";
 import { useParams } from "react-router-dom";
+import { questionType, chatgptSchema, question } from "./types";
 
 const minAnswer = 2;
 const maxAnswer = 6;
@@ -34,12 +34,14 @@ export const CreateExam = () => {
   const [exam, setExam] = useState<chatgptSchema[]>([]);
   const [trueOrFalse, setTrueOrFalse] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
+  const [difficulty, setDifficulty] = useState<string>('');
   const [numQuestion, setNumQuestions] = useState<number>(2);
   const [numAnswers, setNumAnswers] = useState<number>(2);
+  const [name, setName] = useState<string>('');
   //TODO: Add a option for an specific theme
   //TODO: Add some kind of difficulty level
   const prompt =
-    `Create a ${category} exam with ${numQuestion} questions, and for each question, provide the correct answer, an answer explanation, a question statement, and ${numAnswers} answer options. Ensure that the generated output follows the specified JSON schema.`;
+    `Create a ${category} ${difficulty} level exam with ${numQuestion} questions, and for each question, provide the correct answer, an answer explanation, a question statement, and ${trueOrFalse? 'only true or false' : numAnswers} answer options. Ensure that the generated output follows the specified JSON schema.`;
 
   const submitExam = () => {
     setProcessing(true);
@@ -65,6 +67,7 @@ export const CreateExam = () => {
       subscriptionId,
       questions: data,
       answers,
+      name,
     }).then((res: any) => {
       setExamUrl(res.data);
       setProcessing(false);
@@ -158,6 +161,16 @@ export const CreateExam = () => {
             </FormControl>
 
             <FormControl>
+              <InputLabel >
+                Name of the exam
+              </InputLabel>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormControl >
+
+            <FormControl>
               <Select
                 label="Age"
                 value={category}
@@ -168,7 +181,19 @@ export const CreateExam = () => {
                 <MenuItem value={'biology'}>biology</MenuItem>
                 <MenuItem value={'algebra'}>algebra</MenuItem>
               </Select>
-            </FormControl >
+            </FormControl>
+
+            <FormControl>
+              <Select
+                label="difficulty"
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value as any)}
+              >
+                <MenuItem value={'first grade'}>first grade</MenuItem>
+                <MenuItem value={'high school'}>high school</MenuItem>
+                <MenuItem value={'university'}>university</MenuItem>
+              </Select>
+            </FormControl>
 
             <FormControl>
               <InputLabel >
