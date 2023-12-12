@@ -43,13 +43,14 @@ import {
   Metrics,
 } from './lib';
 import SaaSConfig from './config.json';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 
 const Brand = "FIREACT";
 
 function App() {
+  const [userHasSuscription, setHasSuscription] = useState<string>('');
   // merge pathnames
   for (let key in subPathnames) {
     //@ts-ignore
@@ -79,7 +80,27 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AuthRoutes loader={<Loader size="large" />} />} >
-              <Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<MainMenu />} />}>
+              <Route
+                element={
+                  <AppTemplate logo={<Logo size="large" />}
+                    toolBarMenu={<UserMenu />}
+                    drawerMenu={Boolean(userHasSuscription)
+                      ? (
+                          /* @ts-ignore */
+                          <SubscriptionProvider
+                            loader={<Loader size="large" />}
+                            setHasSuscription={setHasSuscription}
+                            userSuscription={userHasSuscription}
+                            renderChildren={true}
+                          >
+                            <SubscriptionMenu />
+                          </SubscriptionProvider>
+                        )
+                      : <MainMenu />
+                    } 
+                  />
+                }
+              >
                 <Route path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
                 <Route path={pathnames.CreateSubscription} element={<CreateSubscription />} />
                 <Route path={pathnames.UserProfile} element={<UserProfile />} />
@@ -89,7 +110,16 @@ function App() {
                 <Route path={pathnames.UserDelete} element={<UserDelete />} />
               </Route>
 
-              <Route path={pathnames.Subscription} element={<SubscriptionProvider loader={<Loader size="large" />} />} >
+              <Route
+                path={pathnames.Subscription}
+                element={
+                  <SubscriptionProvider
+                    setHasSuscription={setHasSuscription}
+                    userSuscription={userHasSuscription}
+                    loader={<Loader size="large" />} 
+                  />
+                }
+              >
                 {/* @ts-ignore */}
                 <Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
                   <Route element={<PermissionRouter permissions={["access"]} />} >

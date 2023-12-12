@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { useParams, Outlet } from 'react-router-dom';
 import { doc, DocumentData, getDoc } from 'firebase/firestore';
 import { AuthContext, FireactContext } from "@fireactjs/core";
@@ -9,7 +9,20 @@ export const SubscriptionContext = React.createContext<{
   setSubscription: React.Dispatch<React.SetStateAction<DocumentData | undefined>>| undefined
 }>({ subscription: undefined, setSubscription: undefined });
 
-export const SubscriptionProvider = ({ loader }: { loader: JSX.Element }) => {
+type props = {
+  loader: JSX.Element,
+  setHasSuscription: React.Dispatch<React.SetStateAction<string>>
+  userSuscription?: string, 
+  renderChildren?: boolean,
+}
+
+export const SubscriptionProvider = ({
+  loader,
+  setHasSuscription,
+  userSuscription,
+  renderChildren,
+  children
+}: PropsWithChildren<props>) => {
   const { subscriptionId } = useParams();
   const [subscription, setSubscription] = useState<DocumentData>();
   const { firestoreInstance }: any = useContext(AuthContext);
@@ -18,13 +31,16 @@ export const SubscriptionProvider = ({ loader }: { loader: JSX.Element }) => {
 
   useEffect(() => {
     setError('');
-    const docRef = doc(firestoreInstance, "subscriptions", subscriptionId || '');
+    const docRef = doc(firestoreInstance, "subscriptions", userSuscription || subscriptionId || '');
 
     getDoc(docRef).then(docSnap => {
       if (docSnap.exists()) {
         const sub = docSnap.data();
         sub.id = subscriptionId;
         setSubscription(sub);
+        if (!userSuscription) {
+          setHasSuscription(subscriptionId as string);
+        }
       } else {
         // no subscription
         setError("No " + config.saas.subscription?.singular + " matches the ID");
@@ -48,7 +64,10 @@ export const SubscriptionProvider = ({ loader }: { loader: JSX.Element }) => {
         <>
           {subscription !== null ? (
             <SubscriptionContext.Provider value={{ subscription, setSubscription }}>
-              <Outlet />
+              {renderChildren
+                ? children
+                : <Outlet />
+              }
             </SubscriptionContext.Provider>
           ) : (
             <Box mt={10}>
