@@ -48,7 +48,8 @@
     "start": "concurrently --kill-others \"vite --port 5173\" \"npm run --prefix ./functions/ serve\" \"stripe listen -f http://localhost:5001/testing-4a329/us-central1/stripeWebHook\" ",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "echo \"add linting\""
+    "lint": "echo \"add linting\"",
+    "setup": "concurrently --restart-tries 0 \"npm install\" \"npm run --prefix ./functions/ setup\""
   },
   "eslintConfig": {
     "extends": [
