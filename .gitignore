@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 src/components/FirebaseAuth/firebase-config.json
 .firebaserc
-firebase.json
 .firebase/hosting.YnVpbGQ.cache
 firestore-debug.log
 functions/.eslintrc.json
