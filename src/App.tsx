@@ -41,6 +41,8 @@ import {
   Loader,
   Logo,
   Metrics,
+  Dashboard,
+  FloatingButton,
 } from './lib';
 import SaaSConfig from './config.json';
 import { useEffect, useState } from 'react';
@@ -86,18 +88,18 @@ function App() {
                     toolBarMenu={<UserMenu />}
                     drawerMenu={Boolean(userHasSuscription)
                       ? (
-                          /* @ts-ignore */
-                          <SubscriptionProvider
-                            loader={<Loader size="large" />}
-                            setHasSuscription={setHasSuscription}
-                            userSuscription={userHasSuscription}
-                            renderChildren={true}
-                          >
-                            <SubscriptionMenu />
-                          </SubscriptionProvider>
-                        )
+                        /* @ts-ignore */
+                        <SubscriptionProvider
+                          loader={<Loader size="large" />}
+                          setHasSuscription={setHasSuscription}
+                          userSuscription={userHasSuscription}
+                          renderChildren={true}
+                        >
+                          <SubscriptionMenu />
+                        </SubscriptionProvider>
+                      )
                       : <MainMenu />
-                    } 
+                    }
                   />
                 }
               >
@@ -116,25 +118,31 @@ function App() {
                   <SubscriptionProvider
                     setHasSuscription={setHasSuscription}
                     userSuscription={userHasSuscription}
-                    loader={<Loader size="large" />} 
+                    loader={<Loader size="large" />}
                   />
                 }
               >
                 {/* @ts-ignore */}
                 <Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
+
                   <Route element={<PermissionRouter permissions={["access"]} />} >
-                    <Route path={pathnames.Subscription + "/"} element={<CreateExam/>}/>
-                    <Route path={pathnames.Metrics} element={<Metrics/>} />
+                    <Route path={pathnames.Subscription + "/create"} element={<CreateExam />} />
+                    <Route element={<FloatingButton path={pathnames.Subscription.replace(':subscriptionId', userHasSuscription) + '/create'} />}>
+                      <Route path={pathnames.Subscription + "/"} element={<Dashboard />} />
+                      <Route path={pathnames.Metrics} element={<Metrics />} />
+                    </Route>
                   </Route>
                   <Route element={<PermissionRouter permissions={["admin"]} />} >
-                    {/* @ts-ignore */}
-                    <Route path={pathnames.Settings} element={<Settings loader={<Loader size="large" />} />} />
-                    <Route path={pathnames.ListUsers} element={<ListUsers loader={<Loader size="large" />} />} />
-                    <Route path={pathnames.ListInvoices} element={<ListInvoices loader={<Loader size="large" />} />} />
-                    <Route path={pathnames.ManagePaymentMethods} element={<ManagePaymentMethods loader={<Loader size="large" />} />} />
-                    <Route path={pathnames.UpdateBillingDetails} element={<UpdateBillingDetails loader={<Loader size="large" />} />} />
-                    <Route path={pathnames.ChangePlan} element={<ChangePlan />} />
-                    <Route path={pathnames.CancelSubscription} element={<CancelSubscription />} />
+                    <Route element={<FloatingButton path={pathnames.Subscription.replace(':subscriptionId', userHasSuscription) + '/create'} />}>
+                      {/* @ts-ignore */}
+                      <Route path={pathnames.Settings} element={<Settings loader={<Loader size="large" />} />} />
+                      <Route path={pathnames.ListUsers} element={<ListUsers loader={<Loader size="large" />} />} />
+                      <Route path={pathnames.ListInvoices} element={<ListInvoices loader={<Loader size="large" />} />} />
+                      <Route path={pathnames.ManagePaymentMethods} element={<ManagePaymentMethods loader={<Loader size="large" />} />} />
+                      <Route path={pathnames.UpdateBillingDetails} element={<UpdateBillingDetails loader={<Loader size="large" />} />} />
+                      <Route path={pathnames.ChangePlan} element={<ChangePlan />} />
+                      <Route path={pathnames.CancelSubscription} element={<CancelSubscription />} />
+                    </Route>
                   </Route>
                 </Route>
               </Route>

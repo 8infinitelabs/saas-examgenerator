@@ -22,6 +22,8 @@ import { MainMenu } from "./components/MainMenu";
 import { Logo } from "./components/Logo";
 import { Loader } from "./components/Loader";
 import { Metrics } from "./components/Metrics";
+import { Dashboard } from "./components/Dashboard";
+import { FloatingButton } from "./components/FloatingButton";
 
 export {
   AddUser,
@@ -49,4 +51,6 @@ export {
   Loader,
   Logo,
   Metrics,
+  Dashboard,
+  FloatingButton,
 }
