@@ -11,6 +11,7 @@ import { PaymentMethodForm } from "./components/PaymentMethodForm";
 import { PermissionRouter } from "./components/PermissionRouter";
 import { PricingPlans } from "./components/PricingPlans";
 import { Settings } from "./components/Settings";
+import { Exams } from "./components/Exams";
 import { ListUsers } from "./components/ListUsers";
 import { AddUser } from "./components/AddUser";
 import { UpdateBillingDetails } from "./components/UpdateBillingDetails";
@@ -40,8 +41,9 @@ export {
   PermissionRouter,
   PricingPlans,
   Settings,
+  Exams,
   SubscriptionContext,
-  SubscriptionMenu,
+  SubscriptionMenu, 
   SubscriptionProvider,
   ListUsers,
   UpdateBillingDetails,

@@ -37,7 +37,9 @@ export const CreateSubscription = () => {
         BillingDetails: null
       }).then((res: any) => {
         if (res.data && res.data.subscriptionId) {
-          navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
+          //DTL: I've changed the next step define "project" in the onboarding process
+          //navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
+          navigate(config.pathnames.Subscription.replace(":subscriptionId", res.data.subscriptionId));
         } else {
           setError("Failed to create the " + singular + ".");
           setProcessing(false);
@@ -77,7 +79,9 @@ export const CreateSubscription = () => {
       }, { merge: true });
     }).then(() => {
       if (subscriptionId !== null) {
-        navigate(config.pathnames.Settings.replace(":subscriptionId", subscriptionId));
+        //DTL: I've changed the next step define "project" in the onboarding process
+        //navigate(config.pathnames.Settings.replace(":subscriptionId", subscriptionId));
+        navigate(config.pathnames.Subscription.replace(":subscriptionId", subscriptionId));
       } else {
         setError("Failed to create the " + singular + ".");
         setProcessing(false);

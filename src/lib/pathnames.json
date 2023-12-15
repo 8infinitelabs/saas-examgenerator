@@ -3,6 +3,7 @@
     "CreateSubscription": "/create",
     "ListSubscriptions": "/",
     "Subscription" : "/sub/:subscriptionId",
+    "Exams": "/sub/:subscriptionId/exams",
     "Settings": "/sub/:subscriptionId/settings",
     "ListUsers": "/sub/:subscriptionId/users",
     "ChangePlan": "/sub/:subscriptionId/billing/plan",

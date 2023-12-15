@@ -41,6 +41,7 @@ import {
   Logo,
   Metrics,
   Dashboard,
+  Exams,
   FloatingButton,
 } from './lib';
 import SaaSConfig from './config.json';
@@ -134,6 +135,7 @@ function App() {
                     <Route path={pathnames.Subscription + "/create"} element={<CreateExam />} />
                     <Route element={<FloatingButton path={pathnames.Subscription.replace(':subscriptionId', userHasSuscription) + '/create'} />}>
                       <Route path={pathnames.Subscription + "/"} element={<Dashboard />} />
+                      <Route path={pathnames.Exams + "/"} element={<Exams />} />
                       <Route path={pathnames.Metrics} element={<Metrics />} />
                     </Route>
                   </Route>
