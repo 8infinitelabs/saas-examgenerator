@@ -37,7 +37,6 @@ import {
   CancelSubscription,
   UpdateBillingDetails,
   CreateExam,
-  MainMenu,
   Loader,
   Logo,
   Metrics,
@@ -80,24 +79,20 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AuthRoutes loader={<Loader size="large" />} />} >
+            { Boolean(userHasSuscription)
+              ?
               <Route
                 element={
                   <AppTemplate logo={<Logo size="large" />}
                     toolBarMenu={<UserMenu />}
-                    drawerMenu={Boolean(userHasSuscription)
-                      ? (
-                          /* @ts-ignore */
-                          <SubscriptionProvider
-                            loader={<Loader size="large" />}
-                            setHasSuscription={setHasSuscription}
-                            userSuscription={userHasSuscription}
-                            renderChildren={true}
-                          >
-                            <SubscriptionMenu />
-                          </SubscriptionProvider>
-                        )
-                      : <MainMenu />
-                    } 
+                    drawerMenu={<SubscriptionProvider
+                      loader={<Loader size="large" />}
+                      setHasSuscription={setHasSuscription}
+                      userSuscription={userHasSuscription}
+                      renderChildren={true}
+                    >
+                      <SubscriptionMenu />
+                    </SubscriptionProvider>} 
                   />
                 }
               >
@@ -109,7 +104,17 @@ function App() {
                 <Route path={pathnames.UserUpdatePassword} element={<UserUpdatePassword />} />
                 <Route path={pathnames.UserDelete} element={<UserDelete />} />
               </Route>
-
+              :
+              <Route>
+              <Route path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
+              <Route path={pathnames.CreateSubscription} element={<CreateSubscription />} />
+              <Route path={pathnames.UserProfile} element={<UserProfile />} />
+              <Route path={pathnames.UserUpdateEmail} element={<UserUpdateEmail />} />
+              <Route path={pathnames.UserUpdateName} element={<UserUpdateName />} />
+              <Route path={pathnames.UserUpdatePassword} element={<UserUpdatePassword />} />
+              <Route path={pathnames.UserDelete} element={<UserDelete />} />
+              </Route>
+            }
               <Route
                 path={pathnames.Subscription}
                 element={
