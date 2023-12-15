@@ -135,7 +135,7 @@ export const CreateExam = () => {
               Create
             </Button>
             {error &&
-              <Alert severity="error">{error}</Alert>
+              <Alert severity="error">Something Failed</Alert>
             }
             {examUrl &&
               <Alert severity="success">http://localhost:5174/{examUrl}</Alert>
